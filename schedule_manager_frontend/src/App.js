@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import Calendar from "./components/Calendar";
 import RightPanel from "./components/RightPanel";
 import FooterBar from "./components/FooterBar";
+import ScheduleTabs from "./components/ScheduleTabs";
 import { api } from "./services/api";
 import { connectWS, onMessage, onStatus } from "./services/ws";
 import { addDays } from "./utils/dateUtils";
@@ -194,21 +195,14 @@ function App() {
           onDragStartResource={() => {}}
           onSelectResource={onSelectResource}
         />
-        <Calendar
-          view={view}
-          date={date}
-          onDateChange={(d) => { setDate(d); setView("day"); }}
-          onSelectEvent={onSelectEvent}
-          onDropResource={onDropResource}
-          liveEventsFeed={liveEventsFeed}
-        />
+        <ScheduleTabs />
         <RightPanel
           selection={selection}
           onAssign={(c) => setSelection({ type: "case", data: c })}
           onReschedule={(c) => setSelection({ type: "case", data: c })}
           onResolveConflict={(c, suggestion) => {
             // Placeholder: resolve action
-            alert(`Resolve: ${suggestion.label}`);
+            alert(`Resolve: ${suggestion?.label || "resolve"}`);
           }}
         />
       </main>
