@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../services/api";
 import ICUCalendar from "./ICUCalendar";
+import NowAvailable from "./NowAvailable";
 
 /**
  * PUBLIC_INTERFACE
  * ScheduleTabs - provides two-tab UI: Manage Availability and Schedule ICU.
- * - Manage Availability: Doctors and ICU rooms can set availability (date, time, recurring days)
- * - Schedule ICU: Book via a weekly calendar; click a cell to open booking modal
+ * - Manage Availability: shows NowAvailable list (doctors and ICU rooms) and a form to set availability
+ * - Schedule ICU: Book via a weekly calendar; no availability list rendering here
  */
 export default function ScheduleTabs() {
   /** Main controller for the two-tab screen */
@@ -33,7 +34,16 @@ export default function ScheduleTabs() {
       </div>
 
       <div style={{ padding: 0, overflow: "hidden" }}>
-        {activeTab === "availability" ? <ManageAvailability /> : <ICUCalendar />}
+        {activeTab === "availability" ? (
+          <div>
+            {/* Availability center: show "Now Available" lists exclusively here */}
+            <NowAvailable />
+            <ManageAvailability />
+          </div>
+        ) : (
+          // Schedule ICU tab: strictly render the calendar without the availability lists
+          <ICUCalendar />
+        )}
       </div>
     </section>
   );
