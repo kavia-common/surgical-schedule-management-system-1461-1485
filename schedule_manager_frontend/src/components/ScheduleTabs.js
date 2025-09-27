@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../services/api";
+import ICUCalendar from "./ICUCalendar";
 
 /**
  * PUBLIC_INTERFACE
  * ScheduleTabs - provides two-tab UI: Manage Availability and Schedule ICU.
  * - Manage Availability: Doctors and ICU rooms can set availability (date, time, recurring days)
- * - Schedule ICU: Book a time slot by selecting available doctors and rooms
+ * - Schedule ICU: Book via a weekly calendar; click a cell to open booking modal
  */
 export default function ScheduleTabs() {
   /** Main controller for the two-tab screen */
@@ -31,8 +32,8 @@ export default function ScheduleTabs() {
         </div>
       </div>
 
-      <div style={{ padding: 12, overflow: "auto" }}>
-        {activeTab === "availability" ? <ManageAvailability /> : <ScheduleICU />}
+      <div style={{ padding: 0, overflow: "hidden" }}>
+        {activeTab === "availability" ? <ManageAvailability /> : <ICUCalendar />}
       </div>
     </section>
   );
@@ -85,8 +86,7 @@ function ManageAvailability() {
         recurring,
         days: Object.entries(days).filter(([k, v]) => v).map(([k]) => k),
       };
-      // Placeholder: call a non-existing endpoint or reuse createCase to simulate saving
-      // Here we noop and show a toast-like alert for demo.
+      // Placeholder: show feedback
       console.log("Availability payload", payload);
       alert("Availability saved");
     } finally {
@@ -210,147 +210,4 @@ function ManageAvailability() {
       </form>
     </div>
   );
-}
-
-/**
- * ScheduleICU - form to select a date/time and book by choosing available doctor and ICU room.
- * Doctor and room dropdowns auto-populate based on availability heuristics (frontend mocked).
- */
-function ScheduleICU() {
-  const [allDoctors, setAllDoctors] = useState([]);
-  const [allRooms, setAllRooms] = useState([]);
-  const [date, setDate] = useState("");
-  const [start, setStart] = useState("09:00");
-  const [end, setEnd] = useState("10:30");
-  const [doctor, setDoctor] = useState("");
-  const [room, setRoom] = useState("");
-  const [booking, setBooking] = useState(false);
-
-  useEffect(() => {
-    let ignore = false;
-    // Load all doctors and rooms
-    Promise.all([
-      api.listResources({ role: "surgeon" }).catch(() => []),
-      api.listResources({ role: "or" }).catch(() => []),
-    ]).then(([docs, ors]) => {
-      if (ignore) return;
-      setAllDoctors(docs || []);
-      setAllRooms(ors || []);
-    });
-    return () => (ignore = true);
-  }, []);
-
-  // naive availability filter: consider status=avail as available; in real scenario, query backend by date/time
-  const availableDoctors = useMemo(() => {
-    return (allDoctors || []).filter((d) => (d.status || "avail") === "avail");
-  }, [allDoctors]);
-  const availableRooms = useMemo(() => {
-    return (allRooms || []).filter((r) => (r.status || "avail") === "avail");
-  }, [allRooms]);
-
-  async function book(e) {
-    e.preventDefault();
-    setBooking(true);
-    try {
-      if (!date) {
-        alert("Please choose a date.");
-        return;
-      }
-      // Compose ISO datetimes for placeholder booking
-      const startISO = combineLocalDateTime(date, start);
-      const endISO = combineLocalDateTime(date, end);
-      const created = await api.createCase({
-        title: "ICU Booking",
-        start: startISO,
-        end: endISO,
-        surgeon: pickNameById(allDoctors, doctor),
-        or: pickNameById(allRooms, room),
-      });
-      alert(`Booked! Case ID: ${created?.id || "n/a"}`);
-      // clear minimal
-      setDoctor("");
-      setRoom("");
-    } catch (err) {
-      alert("Booking failed");
-    } finally {
-      setBooking(false);
-    }
-  }
-
-  return (
-    <div className="section" aria-label="Schedule ICU">
-      <h3 style={{ marginTop: 0 }}>Schedule ICU</h3>
-      <p style={{ color: "var(--muted)", marginTop: 0 }}>
-        Choose a date and time, then select from available doctors and ICU rooms to create a booking.
-      </p>
-      <form onSubmit={book} style={{ display: "grid", gap: 12 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 8, alignItems: "center" }}>
-          <label htmlFor="dateInput">Date</label>
-          <input id="dateInput" className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 1fr", gap: 8, alignItems: "center" }}>
-          <label>Time Window</label>
-          <input className="input" type="time" value={start} onChange={(e) => setStart(e.target.value)} required />
-          <input className="input" type="time" value={end} onChange={(e) => setEnd(e.target.value)} required />
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 8, alignItems: "center" }}>
-          <label htmlFor="docSel">Available Doctor</label>
-          <select
-            id="docSel"
-            className="select"
-            aria-label="Available doctor"
-            value={doctor}
-            onChange={(e) => setDoctor(e.target.value)}
-            required
-          >
-            <option value="">Select doctor…</option>
-            {availableDoctors.map((d) => (
-              <option key={d.id} value={d.id}>{d.name}</option>
-            ))}
-          </select>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 8, alignItems: "center" }}>
-          <label htmlFor="roomSel">Available ICU Room</label>
-          <select
-            id="roomSel"
-            className="select"
-            aria-label="Available ICU room"
-            value={room}
-            onChange={(e) => setRoom(e.target.value)}
-            required
-          >
-            <option value="">Select room…</option>
-            {availableRooms.map((r) => (
-              <option key={r.id} value={r.id}>{r.name}</option>
-            ))}
-          </select>
-        </div>
-
-        <div style={{ display: "flex", gap: 8 }}>
-          <button className="btn btn-primary" type="submit" disabled={booking}>
-            {booking ? "Booking..." : "Book Slot"}
-          </button>
-          <button
-            className="btn"
-            type="button"
-            onClick={() => { setDoctor(""); setRoom(""); }}
-          >
-            Clear
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-}
-
-/** Combine date (yyyy-mm-dd) and time (HH:mm) into local ISO string */
-function combineLocalDateTime(dateStr, timeStr) {
-  const [y, m, d] = dateStr.split("-").map((v) => parseInt(v, 10));
-  const [hh, mm] = timeStr.split(":").map((v) => parseInt(v, 10));
-  const dt = new Date(y, (m - 1), d, hh, mm, 0, 0);
-  return dt.toISOString();
-}
-function pickNameById(items, id) {
-  const found = (items || []).find((x) => String(x.id) === String(id));
-  return found ? found.name : undefined;
 }
