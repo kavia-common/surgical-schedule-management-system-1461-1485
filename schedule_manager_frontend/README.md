@@ -1,82 +1,47 @@
-# Lightweight React Template for KAVIA
+# Surgical Schedule Manager Frontend (Ocean Professional)
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+Three-panel React UI for surgical scheduling with a modern, minimal design and real-time updates.
 
 ## Features
-
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- Three-panel layout: Sidebar (filters/resources), Center (calendar with Day/Week/Month), Right (details/quick actions)
+- Drag-and-drop: move events; drop resources onto calendar to assign or quick-create
+- Live updates via WebSocket with status indicator
+- Accessibility: ARIA roles, keyboard navigation, visible focus rings
+- Ocean Professional theme: blue and amber accents, subtle shadows, rounded corners
 
 ## Getting Started
+- npm install
+- Copy .env.example to .env and set variables:
+  - REACT_APP_API_BASE=/api
+  - REACT_APP_GRAPHQL_PATH=/graphql
+  - REACT_APP_WS_URL=ws://localhost:4000/ws (or as provided by backend)
+- npm start
 
-In the project directory, you can run:
+## Keyboard Shortcuts
+- Ctrl/Cmd+S: Save changes
+- Ctrl/Cmd+Z: Undo
+- Shift+Ctrl/Cmd+Z: Redo
+- ?: Help
 
-### `npm start`
+## Structure
+- src/theme.css: Theme tokens and base styles
+- src/services/api.js: REST/GraphQL helpers (PUBLIC_INTERFACE)
+- src/services/ws.js: WebSocket client (PUBLIC_INTERFACE)
+- src/components/Sidebar.js: Filters and resource list (PUBLIC_INTERFACE)
+- src/components/Calendar.js: Day/Week/Month calendar (PUBLIC_INTERFACE)
+- src/components/RightPanel.js: Contextual details/actions (PUBLIC_INTERFACE)
+- src/components/FooterBar.js: Legend and action bar (PUBLIC_INTERFACE)
+- src/App.js: App shell and wiring
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Integration
+Configure API and WS URLs via .env. The frontend expects:
+- GET /api/resources
+- GET /api/cases?start=ISO&end=ISO
+- POST /api/cases (create), PATCH /api/cases/:id, POST /api/cases/:id/move
+- POST /api/cases/:id/assign and /unassign
+- WebSocket messages: { type: "case.created" | "case.updated" | "case.deleted", payload: {...} }
 
-### `npm test`
+Replace endpoints or adapt api.js to match your backend.
 
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
-
-### Components
-
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Notes
+This implementation uses native HTML5 DnD and a custom calendar grid for light footprint. You can swap for FullCalendar/dnd-kit if preferred.
