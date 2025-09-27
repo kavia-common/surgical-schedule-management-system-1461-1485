@@ -158,11 +158,11 @@ export default function ICUCalendar() {
   return (
     <div className="icu-scheduler">
       <header className="icu-header" role="toolbar" aria-label="ICU calendar header">
-        <button className="nav-btn" aria-label="Previous week" title="Previous week">‹</button>
+        <button className="nav-btn" aria-label="Previous week" onClick={prevWeek}>‹</button>
         <h1 className="icu-title" aria-live="polite">{monthLabel}</h1>
         <div className="icu-header-actions">
-          <button className="nav-btn" aria-label="Next week" title="Next week" onClick={nextWeek}>›</button>
-          <button className="btn btn-ghost" onClick={thisWeek} style={{ marginLeft: 8 }}>This Week</button>
+          <button className="nav-btn" aria-label="Next week" onClick={nextWeek}>›</button>
+          <button className="btn" onClick={thisWeek} style={{ marginLeft: 8 }}>This Week</button>
         </div>
       </header>
 

@@ -20,7 +20,6 @@ export default function ScheduleTabs() {
             role="tab"
             aria-selected={activeTab === "availability" ? "true" : "false"}
             onClick={() => setActiveTab("availability")}
-            title="Manage resource availability"
           >
             Manage Availability
           </button>
@@ -28,7 +27,6 @@ export default function ScheduleTabs() {
             role="tab"
             aria-selected={activeTab === "schedule" ? "true" : "false"}
             onClick={() => setActiveTab("schedule")}
-            title="Book ICU via weekly calendar"
           >
             Schedule ICU
           </button>

@@ -1,2 +1,2 @@
 /* Reserved for component-specific overrides if needed.
-   Base theme in theme.css. Classic three-panel layout restored in App.js. */
+   Base theme in theme.css. App now uses a single-screen layout that renders only ScheduleTabs. */
