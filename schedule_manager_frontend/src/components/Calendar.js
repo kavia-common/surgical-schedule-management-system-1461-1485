@@ -67,7 +67,7 @@ export default function Calendar({
     return (
       <section className="panel center" role="region" aria-label="Month calendar">
         <div className="calendar-toolbar">
-          <span style={{ fontWeight: 600 }}>{date.toLocaleString(undefined, { month: "long", year: "numeric" })}</span>
+          <span style={{ fontWeight: 700, fontSize: 18 }}>{date.toLocaleString(undefined, { month: "long", year: "numeric" })}</span>
         </div>
         <div className="calendar" role="grid" aria-busy={loading ? "true" : "false"}>
           <MonthGrid date={date} onDateChange={onDateChange} events={events} />

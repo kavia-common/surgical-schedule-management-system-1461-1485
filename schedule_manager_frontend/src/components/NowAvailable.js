@@ -67,7 +67,7 @@ export default function NowAvailable({ placement = "above" }) {
       <header className="now-header">
         <div className="now-title">
           <span className="now-dot" aria-hidden="true" />
-          <span className="now-text">Now Available</span>
+          <span className="now-text" style={{ fontSize: 16 }}>Now Available</span>
         </div>
         <div className="now-meta" aria-live="polite">
           as of {timeLabel} {loading ? "• Updating…" : ""}
