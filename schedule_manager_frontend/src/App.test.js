@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
+test("renders scheduling tabs", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByRole("region", { name: /Scheduling/i })).toBeInTheDocument();
+  // Tabs should be visible
+  expect(screen.getByRole("tab", { name: /Manage Availability/i })).toBeInTheDocument();
+  expect(screen.getByRole("tab", { name: /Schedule ICU/i })).toBeInTheDocument();
 });
