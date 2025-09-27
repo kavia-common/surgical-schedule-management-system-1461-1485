@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../services/api";
 import ICUCalendar from "./ICUCalendar";
-import NowAvailable from "./NowAvailable";
 
 /**
  * PUBLIC_INTERFACE
@@ -32,9 +31,6 @@ export default function ScheduleTabs() {
           </button>
         </div>
       </div>
-
-      {/* Prominent snapshot of what's available right now */}
-      <NowAvailable placement="above" />
 
       <div style={{ padding: 0, overflow: "hidden" }}>
         {activeTab === "availability" ? <ManageAvailability /> : <ICUCalendar />}
