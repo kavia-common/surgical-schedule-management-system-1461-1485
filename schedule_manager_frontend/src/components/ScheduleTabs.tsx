@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useEffect, useState } from "react";
 import ICUCalendar from "./ICUCalendar";
 import NowAvailable from "./NowAvailable";
@@ -89,7 +90,7 @@ function ManageAvailability() {
   const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
   const dayLabels: Record<string, string> = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" };
 
-  async function saveAvailability(e: React.FormEvent) {
+  async function saveAvailability(e: SubmitEvent | Event) {
     e.preventDefault();
     setSaving(true);
     try {
@@ -122,14 +123,14 @@ function ManageAvailability() {
             <button
               role="tab"
               aria-selected={type === "doctor" ? "true" : "false"}
-              onClick={(e) => { e.preventDefault(); setType("doctor"); setResourceId(""); }}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.preventDefault(); setType("doctor"); setResourceId(""); }}
             >
               Doctor
             </button>
             <button
               role="tab"
               aria-selected={type === "room" ? "true" : "false"}
-              onClick={(e) => { e.preventDefault(); setType("room"); setResourceId(""); }}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.preventDefault(); setType("room"); setResourceId(""); }}
             >
               ICU Room
             </button>
@@ -143,7 +144,7 @@ function ManageAvailability() {
             className="select"
             aria-label="Resource"
             value={resourceId}
-            onChange={(e) => setResourceId(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setResourceId(e.target.value)}
             disabled={loading}
             required
           >
@@ -161,7 +162,7 @@ function ManageAvailability() {
             className="input"
             type="date"
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)}
             disabled={recurring}
             aria-disabled={recurring ? "true" : "false"}
           />
@@ -169,8 +170,8 @@ function ManageAvailability() {
 
         <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 1fr", gap: 8, alignItems: "center" }}>
           <label>Time Window</label>
-          <input className="input" type="time" value={start} onChange={(e) => setStart(e.target.value)} required />
-          <input className="input" type="time" value={end} onChange={(e) => setEnd(e.target.value)} required />
+          <input className="input" type="time" value={start} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStart(e.target.value)} required />
+          <input className="input" type="time" value={end} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEnd(e.target.value)} required />
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 8, alignItems: "start" }}>
@@ -180,7 +181,7 @@ function ManageAvailability() {
               <input
                 type="checkbox"
                 checked={recurring}
-                onChange={(e) => setRecurring(e.target.checked)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRecurring(e.target.checked)}
               />
               Weekly recurrence
             </label>
@@ -190,7 +191,7 @@ function ManageAvailability() {
                   <input
                     type="checkbox"
                     checked={!!days[k]}
-                    onChange={(e) => setDays((d) => ({ ...d, [k]: e.target.checked }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDays((d) => ({ ...d, [k]: e.target.checked }))}
                     disabled={!recurring}
                     aria-disabled={!recurring ? "true" : "false"}
                     style={{ marginRight: 6 }}
