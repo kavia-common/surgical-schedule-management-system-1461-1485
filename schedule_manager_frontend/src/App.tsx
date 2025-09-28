@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
-import "./theme.css";
+// Use SCSS theme as the primary stylesheet
+import "./styles/theme.scss";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
@@ -27,6 +28,17 @@ function App(): ReactElement {
             element={
               <main className="single-main" role="main" aria-label="Scheduling">
                 <ScheduleTabs />
+              </main>
+            }
+          />
+          <Route
+            path="/schedule/manager"
+            element={
+              <main className="single-main" role="main" aria-label="Schedule Manager">
+                {/*
+                  Three-panel layout page with sidebar, calendar and details panel.
+                */}
+                {require("./pages/ScheduleManager").default()}
               </main>
             }
           />

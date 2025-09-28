@@ -20,6 +20,9 @@ declare module "react" {
   export function useState<T = any>(init?: T): [T, (v: T | ((p: T) => T)) => void];
   export function useEffect(cb: () => void | (() => void), deps?: any[]): void;
   export function useRef<T = any>(v?: T): { current: T };
+  // Add missing hook exports used in codebase
+  export function useMemo<T = any>(factory: () => T, deps?: any[]): T;
+  export function useCallback<T extends (...args: any[]) => any>(fn: T, deps?: any[]): T;
 
   // PUBLIC_INTERFACE
   // Minimal event types used in codebase (used as React.MouseEvent<...>, React.ChangeEvent<...>)

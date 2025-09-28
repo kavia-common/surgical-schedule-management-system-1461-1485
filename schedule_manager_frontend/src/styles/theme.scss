@@ -1,0 +1,337 @@
+//
+// Ocean Professional Theme (SCSS)
+// Centralized tokens, mixins, and base layer
+//
+
+// Tokens
+$color-primary: #2563EB;
+$color-accent: #F59E0B;
+$color-success: #10B981;
+$color-error: #EF4444;
+$color-bg: #f9fafb;
+$color-surface: #ffffff;
+$color-text: #111827;
+$color-muted: #6b7280;
+$color-border: #e5e7eb;
+$blue-50: rgba(59,130,246,0.08);
+$amber-50: rgba(245,158,11,0.08);
+$purple: #7C3AED;
+$teal: #0d9488;
+
+$radius-md: 12px;
+$shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+$shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+$focus-ring-color: $color-primary;
+
+$panel-left-width: 340px;
+$panel-right-width: 380px;
+
+// Mixins
+@mixin focus-ring {
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px $focus-ring-color;
+  }
+}
+@mixin btn-base {
+  border: 1px solid $color-border;
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+  @include focus-ring;
+}
+@mixin chip-base {
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid $color-border;
+  background: #fff;
+}
+@mixin input-base {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid $color-border;
+  padding: 8px 10px;
+  background: #fff;
+  color: $color-text;
+  @include focus-ring;
+}
+
+// Base layer and CSS variables (for compatibility with existing CSS usage)
+:root {
+  --color-primary: #2563EB;
+  --color-accent: #F59E0B;
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-bg: #f9fafb;
+  --color-surface: #ffffff;
+  --color-text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+
+  --panel-left-width: #{$panel-left-width};
+  --panel-right-width: #{$panel-right-width};
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial;
+  background: $color-bg;
+  color: $color-text;
+}
+
+* { box-sizing: border-box; }
+
+// Utility
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px,1px,1px,1px);
+  white-space: nowrap;
+}
+
+// Reusable atoms
+.btn {
+  @include btn-base;
+  &.btn-primary {
+    background: $color-primary;
+    color: #fff;
+    border-color: transparent;
+  }
+  &.btn-ghost {
+    background: transparent;
+    border-color: $color-border;
+  }
+}
+.input { @include input-base; }
+.select { @include input-base; }
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid $color-border;
+  border-radius: 10px;
+  padding: 2px;
+  background: #fff;
+
+  button {
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    color: $color-muted;
+    @include focus-ring;
+    &[aria-selected="true"] {
+      background: $blue-50;
+      color: $color-primary;
+      font-weight: 600;
+      border: 1px solid rgba(37,99,235,0.25);
+    }
+  }
+}
+
+.chip { @include chip-base; }
+.chip-blue { background: $blue-50; color: $color-primary; }
+.chip-amber { background: $amber-50; color: #92400e; border-color: rgba(245,158,11,0.3); }
+.chip-purple { background: rgba(124,58,237,0.1); color: #5b21b6; border-color: rgba(124,58,237,0.2); }
+.chip-teal { background: rgba(13,148,136,0.1); color: #0f766e; border-color: rgba(13,148,136,0.2); }
+
+.badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid currentColor;
+  color: $color-error;
+  background: rgba(239,68,68,0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+// Layout shells
+.app-shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+}
+.single-main {
+  padding: 12px;
+  height: 100%;
+  display: flex; flex-direction: column;
+  min-height: 0;
+}
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  background: $color-surface;
+  box-shadow: $shadow-sm;
+  border-bottom: 1px solid $color-border;
+  padding: 12px 16px;
+
+  .topbar-inner {
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .brand { font-weight: 700; letter-spacing: .2px; }
+  .toolbar {
+    display: grid;
+    grid-template-columns: auto auto auto 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .date-nav {
+    display: inline-flex; gap: 6px; align-items: center;
+    .date-label {
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid $color-border;
+    }
+  }
+  .search { input { @include input-base; } }
+  .live {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-radius: 999px;
+    border: 1px solid $color-border; background: #fff; font-size: 12px;
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: $color-success; }
+  }
+}
+
+// Three-panel grid container
+.main {
+  display: grid;
+  grid-template-columns: $panel-left-width 1fr $panel-right-width;
+  gap: 12px;
+  padding: 12px;
+}
+
+// Panels
+.panel {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  min-height: 0;
+  display: flex; flex-direction: column;
+}
+
+// Sidebar styles
+.sidebar-header { padding: 12px 12px 0 12px; border-bottom: 1px solid $color-border; }
+.filters { padding: 12px; display: grid; gap: 8px;
+  .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+}
+.resource-search { padding: 12px; border-top: 1px solid $color-border; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.resource-list { overflow: auto; padding: 8px 0; }
+.resource-item {
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  gap: 8px; align-items: center;
+  padding: 8px 12px; cursor: grab; border-top: 1px solid $color-border;
+  @include focus-ring;
+}
+.status-dot { width: 10px; height: 10px; border-radius: 50%; }
+.status-avail { background: $color-success; }
+.status-busy { background: $color-accent; }
+.status-down { background: $color-error; }
+.status-standby { background: $purple; }
+.role-pill { font-size: 11px; padding: 2px 6px; border-radius: 999px; border: 1px solid $color-border; color: $color-muted; }
+
+// Calendar common
+.calendar-toolbar {
+  padding: 10px 12px; border-bottom: 1px solid $color-border;
+  display: flex; gap: 8px; align-items: center;
+}
+.calendar { position: relative; flex: 1; overflow: auto; background: linear-gradient(180deg, $blue-50, transparent 180px); }
+
+// Week/Day grid used by Calendar.js
+.timegrid { display: grid; grid-template-columns: 64px 1fr; min-height: 680px; }
+.hours { border-right: 1px solid $color-border; background: #fff; }
+.hour { height: 48px; font-size: 12px; color: $color-muted; padding: 4px 6px; border-bottom: 1px dashed $color-border; }
+.columns { position: relative; }
+.day-columns { display: grid; grid-template-columns: repeat(5, 1fr); border-left: 1px solid $color-border; }
+.day-col { position: relative; min-height: 100%; border-right: 1px solid $color-border; background: #fff; }
+.gridline { position: absolute; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.06); }
+
+// Event
+.event {
+  position: absolute;
+  left: 6px; right: 6px;
+  border-radius: 10px;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-border;
+  background: #fff; overflow: hidden;
+  cursor: grab;
+  .event-header {
+    display: flex; align-items: center; gap: 8px;
+    background: $color-primary; color: #fff; font-weight: 600;
+    padding: 6px 10px; font-size: 12px;
+  }
+  .event-left-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: $color-accent; }
+  .event-body { padding: 8px 10px; display: grid; gap: 6px; }
+  .chips-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  &.conflict { border-color: $color-error; box-shadow: 0 0 0 1px $color-error inset; }
+}
+
+// Right panel
+.right-header {
+  padding: 12px; border-bottom: 1px solid $color-border;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tabs { display: flex; gap: 4px; padding: 8px 8px 0 8px; border-bottom: 1px solid $color-border;
+  .tab { border: 0; background: transparent; padding: 8px 10px; cursor: pointer; color: $color-muted; border-bottom: 2px solid transparent; @include focus-ring;
+    &[aria-selected="true"] { color: $color-primary; font-weight: 600; border-bottom-color: $color-primary; }
+  }
+}
+.right-body { padding: 12px; overflow: auto; display: grid; gap: 12px; }
+.section { border: 1px solid $color-border; border-radius: 10px; padding: 10px; background: #fff;
+  h4 { margin: 0 0 6px 0; }
+}
+
+// Footer
+.footer {
+  padding: 10px 16px;
+  background: linear-gradient(90deg, rgba(59,130,246,0.08), rgba(249,250,251,1));
+  border-top: 1px solid $color-border;
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+}
+.legend { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; font-size: 13px;
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-blue { background: $color-primary; }
+  .legend-teal { background: $teal; }
+  .legend-amber { background: $color-accent; }
+  .legend-purple { background: $purple; }
+  .legend-red { background: $color-error; }
+}
+.footer-actions { display: inline-flex; gap: 8px; }
+
+// Responsive
+@media (max-width: 1280px) {
+  .main { grid-template-columns: $panel-left-width 1fr; }
+  .panel.right { display: none; }
+}
+@media (max-width: 768px) {
+  .topbar .topbar-inner { grid-template-columns: 1fr; gap: 8px; }
+  .topbar .toolbar { grid-template-columns: 1fr; }
+  .main { grid-template-columns: 1fr; }
+  .panel.left { order: 1; }
+  .panel.center { order: 2; }
+  .panel.right { order: 3; display: none; }
+  .footer { grid-template-columns: 1fr; }
+}

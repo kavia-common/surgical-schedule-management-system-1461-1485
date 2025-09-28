@@ -1,0 +1,11 @@
+@use "../theme.scss";
+
+.main-app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+}
+
+.app-grid {
+  @extend .main;
+}

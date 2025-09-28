@@ -8,6 +8,7 @@ Three-panel React UI for surgical scheduling with a modern, minimal design and r
 - Live updates via WebSocket with status indicator
 - Accessibility: ARIA roles, keyboard navigation, visible focus rings
 - Ocean Professional theme: blue and amber accents, subtle shadows, rounded corners
+- SCSS styling: centralized tokens in src/styles/theme.scss
 
 ## Getting Started
 - npm install
@@ -24,14 +25,15 @@ Three-panel React UI for surgical scheduling with a modern, minimal design and r
 - ?: Help
 
 ## Structure
-- src/theme.css: Theme tokens and base styles
+- src/styles/theme.scss: Theme tokens and base styles (Ocean Professional)
 - src/services/api.js: REST/GraphQL helpers (PUBLIC_INTERFACE)
 - src/services/ws.js: WebSocket client (PUBLIC_INTERFACE)
 - src/components/Sidebar.js: Filters and resource list (PUBLIC_INTERFACE)
 - src/components/Calendar.js: Day/Week/Month calendar (PUBLIC_INTERFACE)
 - src/components/RightPanel.js: Contextual details/actions (PUBLIC_INTERFACE)
-- src/components/FooterBar.js: Legend and action bar (PUBLIC_INTERFACE)
-- src/App.js: App shell and wiring
+- src/components/FooterBar.tsx: Legend and action bar (PUBLIC_INTERFACE)
+- src/pages/ScheduleManager.tsx: Full three-panel layout page
+- src/App.tsx: App shell and routing
 
 ## Integration
 Configure API and WS URLs via .env. The frontend expects:
@@ -44,4 +46,5 @@ Configure API and WS URLs via .env. The frontend expects:
 Replace endpoints or adapt api.js to match your backend.
 
 ## Notes
-This implementation uses native HTML5 DnD and a custom calendar grid for light footprint. You can swap for FullCalendar/dnd-kit if preferred.
+- Native HTML5 DnD and a custom calendar grid are used for light footprint.
+- SCSS is compiled via CRA’s built-in Sass support.
