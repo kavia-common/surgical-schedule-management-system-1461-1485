@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -7,16 +7,17 @@ import { useNavigate } from "react-router-dom";
  */
 export default function Header() {
   /** Minimal header with menu */
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const nav = useNavigate();
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Close menu on outside click or Escape
   useEffect(() => {
-    function onDocClick(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false);
+    function onDocClick(e: MouseEvent) {
+      const target = e.target as Node | null;
+      if (menuRef.current && target && !menuRef.current.contains(target)) setOpen(false);
     }
-    function onKey(e) {
+    function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
     }
     document.addEventListener("mousedown", onDocClick);

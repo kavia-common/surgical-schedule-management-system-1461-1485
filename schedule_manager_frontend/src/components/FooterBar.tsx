@@ -1,11 +1,18 @@
-/* Footer: legend and action buttons */
-import React from "react";
+/* no default React import needed with react-jsx */
+
+export interface FooterBarProps {
+  onUndo?: () => void;
+  onRedo?: () => void;
+  onSave?: () => void;
+  onPublish?: () => void;
+  onHelp?: () => void;
+}
 
 /**
  * PUBLIC_INTERFACE
  * FooterBar component
  */
-export default function FooterBar({ onUndo, onRedo, onSave, onPublish, onHelp }) {
+export default function FooterBar({ onUndo, onRedo, onSave, onPublish, onHelp }: FooterBarProps) {
   /** Footer with legend and actions */
   return (
     <footer className="footer" role="contentinfo">

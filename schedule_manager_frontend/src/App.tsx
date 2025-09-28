@@ -1,4 +1,4 @@
-import React from "react";
+import type { ReactElement } from "react";
 import "./theme.css";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -13,7 +13,7 @@ import Schedule from "./pages/Schedule";
  *  - "/" renders the main Scheduling tabs
  *  - "/schedule" renders the Schedule screen
  */
-function App() {
+function App(): ReactElement {
   return (
     <BrowserRouter>
       <div className="app-shell">
