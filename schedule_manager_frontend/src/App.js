@@ -1,21 +1,36 @@
 import React from "react";
 import "./theme.css";
 import "./index.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
 import ScheduleTabs from "./components/ScheduleTabs";
+import Schedule from "./pages/Schedule";
 
 /**
  * PUBLIC_INTERFACE
- * App - Focused single-screen UI showing only the scheduling tabs
- * (Manage Availability and Schedule ICU) with Ocean Professional theme.
+ * App - Adds routing and header with a hamburger menu.
+ * Routes:
+ *  - "/" renders the main Scheduling tabs
+ *  - "/schedule" renders the Schedule screen
  */
 function App() {
-  /** Minimal shell that renders only the ScheduleTabs section */
   return (
-    <div className="app-shell single">
-      <main className="single-main" role="main" aria-label="Scheduling">
-        <ScheduleTabs />
-      </main>
-    </div>
+    <BrowserRouter>
+      <div className="app-shell">
+        <Header />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <main className="single-main" role="main" aria-label="Scheduling">
+                <ScheduleTabs />
+              </main>
+            }
+          />
+          <Route path="/schedule" element={<Schedule />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
