@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ICUCalendar from "./ICUCalendar";
 import NowAvailable from "./NowAvailable";
+import { api } from "../services/api";
 
 /**
  * PUBLIC_INTERFACE
@@ -63,17 +64,26 @@ function ManageAvailability() {
     mon: true, tue: true, wed: true, thu: true, fri: true, sat: false, sun: false
   });
 
-  // Lazy import API to avoid type changes in this migration
+  // Load resources whenever type changes
   useEffect(() => {
     let ignore = false;
     setLoading(true);
-    import("../services/api").then(({ api }) => {
-      return api.listResources({ role: type === "doctor" ? "surgeon" : "or" })
-        .then((data: any[]) => { if (!ignore) setResources(data || []); })
-        .catch(() => { if (!ignore) setResources([]); })
-        .finally(() => !ignore && setLoading(false));
-    });
-    return () => { ignore = true; };
+
+    api
+      .listResources({ role: type === "doctor" ? "surgeon" : "or" })
+      .then((data: any[]) => {
+        if (!ignore) setResources(data || []);
+      })
+      .catch(() => {
+        if (!ignore) setResources([]);
+      })
+      .finally(() => {
+        if (!ignore) setLoading(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [type]);
 
   const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
