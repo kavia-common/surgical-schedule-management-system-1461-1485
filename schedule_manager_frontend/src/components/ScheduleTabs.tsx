@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { api } from "../services/api";
+import { useEffect, useState } from "react";
 import ICUCalendar from "./ICUCalendar";
 import NowAvailable from "./NowAvailable";
 
 /**
  * PUBLIC_INTERFACE
  * ScheduleTabs - provides two-tab UI: Manage Availability and Schedule ICU.
- * - Manage Availability: shows NowAvailable list (doctors and ICU rooms) and a form to set availability
- * - Schedule ICU: Book via a weekly calendar; no availability list rendering here
+ * - Manage Availability: shows NowAvailable list and a form to set availability
+ * - Schedule ICU: Weekly calendar for booking
  */
 export default function ScheduleTabs() {
-  /** Main controller for the two-tab screen */
-  const [activeTab, setActiveTab] = useState("availability"); // 'availability' | 'schedule'
+  const [activeTab, setActiveTab] = useState<"availability" | "schedule">("availability");
   return (
     <section className="panel center" role="region" aria-label="Scheduling">
       <div className="calendar-toolbar" style={{ justifyContent: "space-between" }}>
@@ -36,12 +34,10 @@ export default function ScheduleTabs() {
       <div style={{ padding: 0, overflow: "hidden" }}>
         {activeTab === "availability" ? (
           <div>
-            {/* Availability center: show "Now Available" lists exclusively here */}
             <NowAvailable />
             <ManageAvailability />
           </div>
         ) : (
-          // Schedule ICU tab: strictly render the calendar without the availability lists
           <ICUCalendar />
         )}
       </div>
@@ -50,43 +46,43 @@ export default function ScheduleTabs() {
 }
 
 /**
- * ManageAvailability - form to add and list availability for doctors and ICU rooms
- * This is a frontend-only placeholder; hook to backend as needed via api service.
+ * ManageAvailability - simple form to configure availability.
  */
 function ManageAvailability() {
-  const [resources, setResources] = useState([]);
+  const [resources, setResources] = useState<Array<{ id: string | number; name: string }>>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // form state
-  const [type, setType] = useState("doctor"); // doctor | room
+  const [type, setType] = useState<"doctor" | "room">("doctor");
   const [resourceId, setResourceId] = useState("");
   const [date, setDate] = useState("");
   const [start, setStart] = useState("08:00");
   const [end, setEnd] = useState("18:00");
   const [recurring, setRecurring] = useState(false);
-  const [days, setDays] = useState({ mon: true, tue: true, wed: true, thu: true, fri: true, sat: false, sun: false });
+  const [days, setDays] = useState<Record<string, boolean>>({
+    mon: true, tue: true, wed: true, thu: true, fri: true, sat: false, sun: false
+  });
 
-  // load resources
+  // Lazy import API to avoid type changes in this migration
   useEffect(() => {
     let ignore = false;
     setLoading(true);
-    api
-      .listResources({ role: type === "doctor" ? "surgeon" : "or" })
-      .then((data) => { if (!ignore) setResources(data || []); })
-      .catch(() => { if (!ignore) setResources([]); })
-      .finally(() => !ignore && setLoading(false));
-    return () => (ignore = true);
+    import("../services/api").then(({ api }) => {
+      return api.listResources({ role: type === "doctor" ? "surgeon" : "or" })
+        .then((data: any[]) => { if (!ignore) setResources(data || []); })
+        .catch(() => { if (!ignore) setResources([]); })
+        .finally(() => !ignore && setLoading(false));
+    });
+    return () => { ignore = true; };
   }, [type]);
 
-  const dayKeys = ["mon","tue","wed","thu","fri","sat","sun"];
-  const dayLabels = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" };
+  const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+  const dayLabels: Record<string, string> = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" };
 
-  async function saveAvailability(e) {
+  async function saveAvailability(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     try {
-      // Example payload; adapt to backend expectations.
       const payload = {
         resourceId,
         type,
@@ -94,9 +90,8 @@ function ManageAvailability() {
         start,
         end,
         recurring,
-        days: Object.entries(days).filter(([k, v]) => v).map(([k]) => k),
+        days: Object.entries(days).filter(([_, v]) => v).map(([k]) => k),
       };
-      // Placeholder: show feedback
       console.log("Availability payload", payload);
       alert("Availability saved");
     } finally {
@@ -144,7 +139,7 @@ function ManageAvailability() {
           >
             <option value="">{loading ? "Loading..." : "Select..."}</option>
             {(resources || []).map((r) => (
-              <option key={r.id} value={r.id}>{r.name}</option>
+              <option key={String(r.id)} value={String(r.id)}>{r.name}</option>
             ))}
           </select>
         </div>
@@ -159,7 +154,6 @@ function ManageAvailability() {
             onChange={(e) => setDate(e.target.value)}
             disabled={recurring}
             aria-disabled={recurring ? "true" : "false"}
-            aria-description="Select a date for one-time availability; disabled when recurring is enabled."
           />
         </div>
 

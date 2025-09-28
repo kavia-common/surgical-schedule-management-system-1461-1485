@@ -3,22 +3,27 @@ import { useNavigate } from "react-router-dom";
 
 /**
  * PUBLIC_INTERFACE
- * Header - Minimal top bar with a hamburger menu. Contains a 'Schedule' item that navigates to /schedule.
+ * Header - Top bar with hamburger menu. Clicking opens a left drawer with 'Home' and 'Schedule Manager'.
  */
 export default function Header() {
-  /** Minimal header with menu */
   const [open, setOpen] = useState<boolean>(false);
   const nav = useNavigate();
-  const menuRef = useRef<HTMLDivElement | null>(null);
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  // Close menu on outside click or Escape
+  // Close on outside click or Escape
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
       const target = e.target as Node | null;
-      if (menuRef.current && target && !menuRef.current.contains(target)) setOpen(false);
+      if (drawerRef.current && target && !drawerRef.current.contains(target) && target !== buttonRef.current) {
+        setOpen(false);
+      }
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
     }
     document.addEventListener("mousedown", onDocClick);
     document.addEventListener("keydown", onKey);
@@ -28,77 +33,116 @@ export default function Header() {
     };
   }, []);
 
-  function goSchedule() {
+  function navigateTo(path: string) {
     setOpen(false);
-    nav("/schedule");
+    nav(path);
   }
 
   return (
     <header className="topbar" role="banner">
       <div className="topbar-inner">
-        <div className="brand">Surgical Schedule</div>
-        <div className="toolbar">
+        <div className="brand" aria-label="Application title">Surgical Schedule</div>
+
+        <div className="toolbar" role="toolbar" aria-label="Global actions">
+          <div>
+            <button
+              ref={buttonRef}
+              className="btn"
+              aria-haspopup="dialog"
+              aria-expanded={open ? "true" : "false"}
+              aria-controls="app-drawer"
+              aria-label="Open navigation menu"
+              onClick={() => setOpen((s) => !s)}
+            >
+              <i className="bi bi-list menu-icon" aria-hidden="true" />
+              <span className="visually-hidden">Menu</span>
+            </button>
+          </div>
+
           <div className="segmented" aria-hidden="true">
             <button aria-selected="true">Week</button>
             <button aria-selected="false">Day</button>
             <button aria-selected="false">Month</button>
           </div>
+
           <div className="date-nav" aria-hidden="true">
             <button className="btn">Prev</button>
             <span className="date-label">This Week</span>
             <button className="btn">Next</button>
           </div>
+
           <div className="search" aria-hidden="true">
             <input className="input" placeholder="Search…" />
           </div>
+
           <div className="live" aria-hidden="true">
             <span className="live-dot" /> Live
           </div>
-
-          {/* Hamburger menu */}
-          <div ref={menuRef} style={{ position: "relative" }}>
-            <button
-              className="btn"
-              aria-haspopup="menu"
-              aria-expanded={open ? "true" : "false"}
-              aria-label="Open menu"
-              onClick={() => setOpen((s) => !s)}
-            >
-              {/* simple list icon */}
-              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="currentColor" d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path>
-              </svg>
-            </button>
-            {open && (
-              <div
-                role="menu"
-                aria-label="Main menu"
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  top: "100%",
-                  marginTop: 6,
-                  background: "#fff",
-                  border: "1px solid var(--border)",
-                  borderRadius: 10,
-                  boxShadow: "var(--shadow-md)",
-                  minWidth: 160,
-                  zIndex: 20,
-                  overflow: "hidden",
-                }}
-              >
-                <button
-                  role="menuitem"
-                  className="btn"
-                  style={{ display: "block", width: "100%", textAlign: "left", border: 0, borderRadius: 0 }}
-                  onClick={goSchedule}
-                >
-                  Schedule
-                </button>
-              </div>
-            )}
-          </div>
         </div>
+      </div>
+
+      {/* Left Drawer */}
+      <div
+        id="app-drawer"
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="false"
+        aria-label="Main navigation"
+        style={{
+          position: "fixed",
+          inset: "0 0 0 0",
+          pointerEvents: open ? "auto" : "none",
+          zIndex: 30,
+        }}
+      >
+        {/* Backdrop */}
+        <div
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: open ? "rgba(17,24,39,0.4)" : "transparent",
+            transition: "background .2s ease",
+          }}
+        />
+        {/* Panel */}
+        <nav
+          role="navigation"
+          aria-label="Primary"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: 280,
+            height: "100%",
+            background: "#fff",
+            borderRight: "1px solid var(--border)",
+            boxShadow: "var(--shadow-md)",
+            transform: open ? "translateX(0)" : "translateX(-105%)",
+            transition: "transform .2s ease",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ padding: 12, borderBottom: "1px solid var(--border)", fontWeight: 700 }}>
+            Navigation
+          </div>
+          <button
+            className="btn"
+            style={{ borderRadius: 0, borderLeft: 0, borderRight: 0, textAlign: "left" }}
+            onClick={() => navigateTo("/")}
+          >
+            Home
+          </button>
+          <button
+            className="btn"
+            style={{ borderRadius: 0, borderLeft: 0, borderRight: 0, textAlign: "left" }}
+            onClick={() => navigateTo("/schedule")}
+          >
+            Schedule Manager
+          </button>
+        </nav>
       </div>
     </header>
   );

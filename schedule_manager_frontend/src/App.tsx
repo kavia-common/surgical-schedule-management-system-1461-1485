@@ -4,14 +4,13 @@ import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import ScheduleTabs from "./components/ScheduleTabs";
-import Schedule from "./pages/Schedule";
 
 /**
  * PUBLIC_INTERFACE
  * App - Adds routing and header with a hamburger menu.
  * Routes:
- *  - "/" renders the main Scheduling tabs
- *  - "/schedule" renders the Schedule screen
+ *  - "/" renders Home (blank page with header)
+ *  - "/schedule" renders the Schedule Manager (tabs UI)
  */
 function App(): ReactElement {
   return (
@@ -21,13 +20,16 @@ function App(): ReactElement {
         <Routes>
           <Route
             path="/"
+            element={<main className="single-main" role="main" aria-label="Home" />}
+          />
+          <Route
+            path="/schedule"
             element={
               <main className="single-main" role="main" aria-label="Scheduling">
                 <ScheduleTabs />
               </main>
             }
           />
-          <Route path="/schedule" element={<Schedule />} />
         </Routes>
       </div>
     </BrowserRouter>

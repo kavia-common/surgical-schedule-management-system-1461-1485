@@ -415,6 +415,13 @@ button, [role="button"], [tabindex] {
   color: #fff;
   border-color: transparent;
 }
+/* Minimal support for Bootstrap Icons class used for hamburger if icon font not present */
+.bi.menu-icon::before,
+.bi.bi-list.menu-icon::before {
+  content: "≡";
+  font-size: 18px;
+  line-height: 1;
+}
 .btn-ghost {
   background: transparent;
   border-color: var(--border);
