@@ -1,28 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import "./theme.css";
 import "./index.css";
 import ScheduleTabs from "./components/ScheduleTabs";
-import Login from "./components/Login";
-import "./components/Login.css";
 
 /**
  * PUBLIC_INTERFACE
- * App - entry shell. Shows Login first, then the scheduling UI after success.
- * Ocean Professional theme is applied globally.
+ * App - Focused single-screen UI showing only the scheduling tabs
+ * (Manage Availability and Schedule ICU) with Ocean Professional theme.
  */
 function App() {
-  const [authed, setAuthed] = useState(false);
-
-  if (!authed) {
-    return (
-      <div className="app-shell single">
-        <main className="single-main" role="main" aria-label="Login">
-          <Login onSuccess={() => setAuthed(true)} />
-        </main>
-      </div>
-    );
-  }
-
+  /** Minimal shell that renders only the ScheduleTabs section */
   return (
     <div className="app-shell single">
       <main className="single-main" role="main" aria-label="Scheduling">
