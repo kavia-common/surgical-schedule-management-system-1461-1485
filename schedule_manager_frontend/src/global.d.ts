@@ -10,7 +10,8 @@
 /// <reference path="./types/shims.d.ts" />
 /// <reference path="./types/js-modules.d.ts" />
 /// <reference path="./types/react-jsx-runtime.d.ts" />
-/// <reference path="./types/api.d.ts" />
+//// <reference path="./types/api.d.ts" />
+/// <reference path="./types/ws.d.ts" />
 
 // Additionally, provide a direct declaration for the relative path used in ScheduleTabs
 declare module "../services/api" {
@@ -22,7 +23,9 @@ declare module "../services/api" {
     moveCase: (id: string | number, start: string, end: string) => Promise<any>;
     assignResource: (caseId: string | number, resourceId: string | number) => Promise<any>;
     unassignResource: (caseId: string | number, resourceId: string | number) => Promise<any>;
-  };
+  }
+
+/// <reference path="./types/ws.d.ts" />;
   export function fetchJSON(path: string, options?: Record<string, any>): Promise<any>;
   export function graphql(query: string, variables?: Record<string, any>): Promise<any>;
 }
