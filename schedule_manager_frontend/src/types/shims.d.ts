@@ -15,6 +15,10 @@ declare module "react" {
   // PUBLIC_INTERFACE
   export const StrictMode: any;
 
+  // Suspense/lazy (minimal)
+  export const Suspense: any;
+  export function lazy<T = any>(loader: () => Promise<any>): T;
+
   // Factory + hooks (very loose typing to satisfy TS without @types)
   export function createElement(...args: any[]): any;
   export function useState<T = any>(init?: T): [T, (v: T | ((p: T) => T)) => void];

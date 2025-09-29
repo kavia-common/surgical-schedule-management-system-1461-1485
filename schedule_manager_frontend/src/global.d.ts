@@ -23,9 +23,7 @@ declare module "../services/api" {
     moveCase: (id: string | number, start: string, end: string) => Promise<any>;
     assignResource: (caseId: string | number, resourceId: string | number) => Promise<any>;
     unassignResource: (caseId: string | number, resourceId: string | number) => Promise<any>;
-  }
-
-/// <reference path="./types/ws.d.ts" />;
+  };
   export function fetchJSON(path: string, options?: Record<string, any>): Promise<any>;
   export function graphql(query: string, variables?: Record<string, any>): Promise<any>;
 }
