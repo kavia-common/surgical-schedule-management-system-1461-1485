@@ -1,4 +1,4 @@
-import React, { type ReactElement } from "react";
+import type { ReactElement } from "react";
 // Use SCSS theme as the primary stylesheet
 import "./styles/theme.scss";
 import "./index.css";
@@ -35,13 +35,10 @@ function App(): ReactElement {
             path="/schedule/manager"
             element={
               <main className="single-main" role="main" aria-label="Schedule Manager">
-                {/* Three-panel layout page with sidebar, calendar and details panel. */}
-                <React.Suspense fallback={<div>Loading…</div>}>
-                  {(() => {
-                    const ScheduleManager = React.lazy(() => import("./pages/ScheduleManager"));
-                    return <ScheduleManager />;
-                  })()}
-                </React.Suspense>
+                {/*
+                  Three-panel layout page with sidebar, calendar and details panel.
+                */}
+                {require("./pages/ScheduleManager").default()}
               </main>
             }
           />

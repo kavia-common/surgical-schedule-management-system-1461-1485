@@ -10,8 +10,7 @@
 /// <reference path="./types/shims.d.ts" />
 /// <reference path="./types/js-modules.d.ts" />
 /// <reference path="./types/react-jsx-runtime.d.ts" />
-//// <reference path="./types/api.d.ts" />
-/// <reference path="./types/ws.d.ts" />
+/// <reference path="./types/api.d.ts" />
 
 // Additionally, provide a direct declaration for the relative path used in ScheduleTabs
 declare module "../services/api" {

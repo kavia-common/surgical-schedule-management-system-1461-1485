@@ -1,5 +1,3 @@
-/* Force-load WS ambient declarations for CI TS build */
-/// <reference path="../types/ws.d.ts" />
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/Sidebar.js";
 import Calendar from "../components/Calendar.js";
