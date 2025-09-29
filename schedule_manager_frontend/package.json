@@ -31,7 +31,6 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "sass": "^1.93.2"
+    "cross-env": "^7.0.3"
   }
 }

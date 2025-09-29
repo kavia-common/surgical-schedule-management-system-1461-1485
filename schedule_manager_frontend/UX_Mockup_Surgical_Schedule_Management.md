@@ -1,6 +1,6 @@
 # Surgical Schedule Management System – UX Wireframe and UI Specification (Ocean Professional)
 
-This document presents a markdown-based wireframe (textual mockup) and UI specification for the Surgical Schedule Management System front-end. It follows the three-panel layout and the Ocean Professional style guide with accessibility and responsiveness notes. Styling is implemented with SCSS (see src/styles/theme.scss).
+This document presents a markdown-based wireframe (textual mockup) and UI specification for the Surgical Schedule Management System front-end. It follows the three-panel layout and the Ocean Professional style guide with accessibility and responsiveness notes.
 
 Color Palette (Ocean Professional)
 - Primary: #2563EB (Ocean Blue)

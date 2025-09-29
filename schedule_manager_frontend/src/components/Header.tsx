@@ -140,13 +140,6 @@ export default function Header() {
             style={{ borderRadius: 0, borderLeft: 0, borderRight: 0, textAlign: "left" }}
             onClick={() => navigateTo("/schedule")}
           >
-            Schedule Tabs
-          </button>
-          <button
-            className="btn"
-            style={{ borderRadius: 0, borderLeft: 0, borderRight: 0, textAlign: "left" }}
-            onClick={() => navigateTo("/schedule/manager")}
-          >
             Schedule Manager
           </button>
         </nav>
